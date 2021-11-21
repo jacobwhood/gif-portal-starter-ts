@@ -1,4 +1,4 @@
-import { TEST_GIFS } from '../test-data';
+import { TEST_GIFS } from '../../test-data';
 
 interface GifContainerProps {
     walletAddress: string;
