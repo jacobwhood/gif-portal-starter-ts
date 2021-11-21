@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
-import twitterLogo from './assets/twitter-logo.svg';
 import './App.css';
 
-// Constants
-const TWITTER_HANDLE = '_buildspace';
-const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
+import { useCallback, useEffect, useState } from 'react';
+import twitterLogo from './assets/twitter-logo.svg';
+import { TWITTER_HANDLE, TWITTER_LINK } from './constants';
+import { ConnectedContainer } from './components/ConnectedContainer';
+import { DefaultContainer } from './components/DefaultContainer';
 
 const App = (): JSX.Element => {
     const [isLoading, setIsLoading] = useState(true);
@@ -76,17 +76,13 @@ const App = (): JSX.Element => {
                 : (
                     <div className={walletAddress ? 'authed-container' : 'container'}>
                         <div className="header-container">
-                            <p className="header">🖼 GIF Portal</p>
+                            <p className="header">🖼 Ah, football</p>
                             <p className="sub-text">
-                                View your GIF collection in the metaverse ✨
+                                The beautiful game (most of the time)
                             </p>
-                            {walletAddress !== null
-                                ? (<p className="sub-text">You're already connected with key: {walletAddress}</p>)
-                                : (
-                                    <button className="cta-button connect-wallet-button" onClick={connectWallet}>
-                                        Connect to Wallet
-                                    </button>
-                                )
+                            {walletAddress === null
+                                ? <DefaultContainer connectWallet={connectWallet} />
+                                : <ConnectedContainer walletAddress={walletAddress} />
                             }
                         </div>
                         <div className="footer-container">
