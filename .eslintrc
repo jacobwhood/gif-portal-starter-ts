@@ -1,0 +1,42 @@
+{
+    "root": true,
+    "env": {
+        "es6": true
+    },
+    "extends": ["prettier/react"],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+        "prettier/prettier": 0,
+        "eslint-comments/no-unlimited-disable": 0,
+        "eslint-comments/no-unused-disable": 0,
+        "object-curly-spacing": ["error", "always"],
+        "eol-last": 0,
+        "comma-dangle": ["error", "never"],
+        "max-len": [
+            2,
+            {
+                "code": 120,
+                "ignorePattern": "d='([\\s\\S]*?)'"
+            }
+        ],
+        "@typescript-eslint/explicit-function-return-type": 2,
+        "sort-imports": ["error",
+            {
+            "ignoreCase": false,
+            "ignoreDeclarationSort": true,
+            "ignoreMemberSort": false,
+            "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
+            "allowSeparatedGroups": false
+            }
+        ],
+        "indent": ["error", 4],
+        "quotes": [
+            2, "single",
+            {
+                "avoidEscape": false,
+                "allowTemplateLiterals": true
+            }
+        ]
+    }
+}
