@@ -20,7 +20,8 @@
         "noEmit": true,
         "jsx": "react-jsx",
         "typeRoots": [
-            "./src/declarations.d.ts"
+            "src/declarations.d.ts",
+            "src/react-app-env.d.ts"
         ]
     },
     "include": [

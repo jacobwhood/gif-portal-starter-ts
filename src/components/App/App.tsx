@@ -1,10 +1,10 @@
 import './App.css';
 
 import { useCallback, useEffect, useState } from 'react';
-import twitterLogo from './assets/twitter-logo.svg';
-import { TWITTER_HANDLE, TWITTER_LINK } from './constants';
-import { ConnectedContainer } from './components/ConnectedContainer';
-import { DefaultContainer } from './components/DefaultContainer';
+import twitterLogo from '../../assets/twitter-logo.svg';
+import { TWITTER_HANDLE, TWITTER_LINK } from '../../constants';
+import { ConnectedContainer } from '../ConnectedContainer/ConnectedContainer';
+import { DefaultContainer } from '../DefaultContainer/DefaultContainer';
 
 const App = (): JSX.Element => {
     const [isLoading, setIsLoading] = useState(true);

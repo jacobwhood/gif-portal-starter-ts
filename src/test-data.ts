@@ -1,5 +1,8 @@
 /* eslint-disable */
 
+/**
+ * GIF URLs use for testing data
+ */
 export const TEST_GIFS = [
     'https://media.giphy.com/media/3ohjUNypcf1MNkM7rW/giphy.gif',
     'https://media.giphy.com/media/emIAxSIz7J7y0/giphy.gif',

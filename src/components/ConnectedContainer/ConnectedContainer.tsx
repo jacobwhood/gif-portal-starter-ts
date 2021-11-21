@@ -5,8 +5,8 @@ import {
     useEffect,
     useState
 } from 'react';
-import { TEST_GIFS } from '../test-data';
-import { GifContainer } from './GifContainer';
+import { TEST_GIFS } from '../../test-data';
+import { GifContainer } from '../GifContainer/GifContainer';
 
 interface ConnectedContainerProps {
     walletAddress: string;
