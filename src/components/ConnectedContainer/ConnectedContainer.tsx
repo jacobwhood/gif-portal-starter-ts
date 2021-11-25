@@ -31,7 +31,7 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
 
         // Get our program's id from the IDL file.
         return web3.Keypair.fromSecretKey(secret);
-    }, []);
+    }, [keyPair._keypair.secretKey]);
     const programID = new PublicKey(idl.metadata.address);
 
     const handleFormSubmit = useCallback(async (event: ReactFormEvent): Promise<void> => {
@@ -56,7 +56,7 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
             await getGifList();
             setInputValue('');
         } catch (error) {
-            console.log('Error sending GIF:', error)
+            console.log('Error sending GIF:', error);
         }
 
         console.log(`Gif link: ${inputValue}`);
@@ -101,13 +101,31 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
                 },
                 signers: [baseAccount]
             });
-            console.log('Created a new BaseAccount w/ address:', baseAccount.publicKey.toString())
+            console.log('Created a new BaseAccount w/ address:', baseAccount.publicKey.toString());
             await getGifList();
 
         } catch(error) {
-            console.log('Error creating BaseAccount account:', error)
+            console.log('Error creating BaseAccount account:', error);
         }
     }, [idl, programID, baseAccount.publicKey, SystemProgram.programId]);
+
+    const upvoteGif = useCallback(async (gifLink: string) => {
+        try {
+            const provider = getProvider();
+            const program = new Program(idl as Idl, programID, provider);
+
+            await program.rpc.upvoteGif(gifLink, {
+                accounts: {
+                    baseAccount: baseAccount.publicKey,
+                    user: provider.wallet.publicKey
+                }
+            });
+            console.log('GIF successfully upvoted');
+            await getGifList();
+        } catch (error) {
+            console.log('Error upvoting GIF:', error);
+        }
+    }, [getProvider, idl, programID, baseAccount.publicKey]);
 
     useEffect(() => {
         if (walletAddress) {
@@ -138,7 +156,7 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
                         Submit
                     </button>
                 </form>
-                <GifContainer walletAddress={walletAddress} gifList={gifList} />
+                <GifContainer gifList={gifList} handleUpvoteGif={upvoteGif} />
             </div>
         );
 };
