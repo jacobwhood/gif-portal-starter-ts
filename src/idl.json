@@ -64,6 +64,32 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "sendSol",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fromUser",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "toUser",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -111,6 +137,6 @@
     }
   ],
   "metadata": {
-    "address": "FCWxv9VNDTseqsUNKTpn6fCxNP33aWUYXcogLd5DJ1rW"
+      "address": "FCWxv9VNDTseqsUNKTpn6fCxNP33aWUYXcogLd5DJ1rW"
   }
 }

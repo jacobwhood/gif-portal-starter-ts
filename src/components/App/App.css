@@ -56,7 +56,7 @@
   animation: gradient-animation 4s ease infinite;
 }
 
-.submit-gif-button {
+.base-button {
   background: -webkit-linear-gradient(left, #4e44ce, #35aee2);
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
@@ -113,13 +113,16 @@
   color: white;
   padding: 10px;
   width: 50%;
-  height: 60px;
   font-size: 16px;
   box-sizing: border-box;
   background-color: rgba(0, 0, 0, 0.25);
   border: none;
   border-radius: 10px;
+}
+
+.connected-container input[type="text"]:not(".tip-input") {
   margin: 50px auto;
+  height: 60px;
 }
 
 .connected-container button {
