@@ -1,6 +1,7 @@
 import './App.css';
 
 import { useCallback, useEffect, useState } from 'react';
+
 import twitterLogo from '../../assets/twitter-logo.svg';
 import { TWITTER_HANDLE, TWITTER_LINK } from '../../constants';
 import { ConnectedContainer } from '../ConnectedContainer/ConnectedContainer';

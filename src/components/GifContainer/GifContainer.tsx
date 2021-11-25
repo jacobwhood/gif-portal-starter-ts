@@ -1,17 +1,21 @@
 import { TEST_GIFS } from '../../test-data';
 
-interface GifContainerProps {
-    walletAddress: string;
-    gifList: string[];
+export type GifData = {
+    gifLink: string;
 }
 
-export const GifContainer = ({ walletAddress }: GifContainerProps): JSX.Element => {
+interface GifContainerProps {
+    walletAddress: string;
+    gifList: GifData[];
+}
+
+export const GifContainer = ({ walletAddress, gifList }: GifContainerProps): JSX.Element => {
     return (
         <div className="connected-container">
             <div className="gif-grid">
-                {TEST_GIFS.map(gif => (
-                    <div className="gif-item" key={gif}>
-                        <img src={gif} alt={gif} />
+                {gifList.map((gif, index) => (
+                    <div className="gif-item" key={index}>
+                        <img src={gif.gifLink} alt={'An awesome GIF!'} />
                     </div>
                 ))}
             </div>
