@@ -1,6 +1,7 @@
 import './App.css';
 
 import { useCallback, useEffect, useState } from 'react';
+
 import twitterLogo from '../../assets/twitter-logo.svg';
 import { TWITTER_HANDLE, TWITTER_LINK } from '../../constants';
 import { ConnectedContainer } from '../ConnectedContainer/ConnectedContainer';
@@ -74,16 +75,18 @@ const App = (): JSX.Element => {
             {isLoading
                 ? (<div className="container" style={{ color: 'white' }}>Loading...</div>)
                 : (
-                    <div className={walletAddress ? 'authed-container' : 'container'}>
-                        <div className="header-container">
-                            <p className="header">🖼 Ah, football</p>
-                            <p className="sub-text">
+                    <>
+                        <div className={walletAddress ? 'authed-container' : 'container'}>
+                            <div className="header-container">
+                                <p className="header">🖼 Ah, football</p>
+                                <p className="sub-text">
                                 The beautiful game (most of the time)
-                            </p>
-                            {walletAddress === null
-                                ? <DefaultContainer connectWallet={connectWallet} />
-                                : <ConnectedContainer walletAddress={walletAddress} />
-                            }
+                                </p>
+                                {walletAddress === null
+                                    ? <DefaultContainer connectWallet={connectWallet} />
+                                    : <ConnectedContainer walletAddress={walletAddress} />
+                                }
+                            </div>
                         </div>
                         <div className="footer-container">
                             <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
@@ -94,7 +97,7 @@ const App = (): JSX.Element => {
                                 rel="noreferrer"
                             >{`built on @${TWITTER_HANDLE}`}</a>
                         </div>
-                    </div>
+                    </>
                 )}
         </div>
     );
