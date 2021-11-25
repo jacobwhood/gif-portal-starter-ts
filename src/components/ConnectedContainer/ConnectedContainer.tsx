@@ -12,7 +12,8 @@ import {
 import { ConfirmOptions, Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { Idl, Program, Provider, web3 } from '@project-serum/anchor';
 
-import { GifContainer, GifData } from '../GifContainer/GifContainer';
+import { GifContainer } from '../GifContainer/GifContainer';
+import { GifData } from '../GifContainer/GifView';
 
 interface ConnectedContainerProps {
     walletAddress: string;
@@ -42,7 +43,7 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
         }
 
         try {
-            const provider = getProvider();
+            const { provider } = getWeb3Entites();
             const program = new Program(idl as Idl, programID, provider);
 
             await program.rpc.addGif(inputValue, {
@@ -62,7 +63,7 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
         console.log(`Gif link: ${inputValue}`);
     }, [inputValue]);
 
-    const getProvider = useCallback(() => {
+    const getWeb3Entites = useCallback(() => {
         // Set our network to devnet.
         const network = clusterApiUrl('devnet');
         
@@ -71,12 +72,15 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
         const connection = new Connection(network, opts.preflightCommitment as web3.Commitment);
         const provider = new Provider(connection, window.solana as any, { preflightCommitment: 'processed' });
 
-        return provider;
+        return {
+            connection,
+            provider
+        };
     }, []);
 
     const getGifList = useCallback(async () => {
         try {
-            const provider = getProvider();
+            const { provider } = getWeb3Entites();
             const program = new Program(idl as Idl, programID, provider);
             const account = await program.account.baseAccount.fetch(baseAccount.publicKey);
     
@@ -86,11 +90,11 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
             console.log(`Error in getGifList: ${error}`);
             setGifList(null);
         }
-    }, [getProvider, baseAccount]);
+    }, [getWeb3Entites, baseAccount]);
 
     const createGifAccount = useCallback(async () => {
         try {
-            const provider = getProvider();
+            const { provider } = getWeb3Entites();
             const program = new Program(idl as Idl, programID, provider);
             console.log('ping')
             await program.rpc.startStuffOff({
@@ -111,7 +115,7 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
 
     const upvoteGif = useCallback(async (gifLink: string) => {
         try {
-            const provider = getProvider();
+            const { provider } = getWeb3Entites();
             const program = new Program(idl as Idl, programID, provider);
 
             await program.rpc.upvoteGif(gifLink, {
@@ -125,7 +129,38 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
         } catch (error) {
             console.log('Error upvoting GIF:', error);
         }
-    }, [getProvider, idl, programID, baseAccount.publicKey]);
+    }, [getWeb3Entites, idl, programID, baseAccount.publicKey]);
+
+    const sendSol = useCallback(async (gifData: GifData, amount: number) => {
+        try {
+            const { provider, connection } = getWeb3Entites();
+
+            const transaction = new web3.Transaction().add(
+                web3.SystemProgram.transfer({
+                    fromPubkey: provider.wallet.publicKey,
+                    toPubkey: (gifData.userAddress as unknown) as PublicKey,
+                    lamports: web3.LAMPORTS_PER_SOL * amount
+                })
+            );
+
+            transaction.feePayer = provider.wallet.publicKey;
+            transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+
+            // Transaction constructor initialized successfully
+            if (transaction) {
+                console.log('Txn created successfully');
+            }
+    
+            // Request creator to sign the transaction (allow the transaction)
+            const signedTransaction = await provider.send(transaction);
+            // Confirm whether the transaction went through or not
+            await connection.confirmTransaction(signedTransaction);
+            console.log('GIF successfully upvoted');
+            await getGifList();
+        } catch (error) {
+            console.log('Error upvoting GIF:', error);
+        }
+    }, [getWeb3Entites, idl, programID, baseAccount.publicKey]);
 
     useEffect(() => {
         if (walletAddress) {
@@ -137,14 +172,14 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
     return gifList === null
         ? (
             <>
-                <button className="cta-button submit-gif-button" onClick={createGifAccount}>
+                <button className="cta-button base-button" onClick={createGifAccount}>
                     Do One-Time Initialization For GIF Program Account
                 </button>
             </>
         )
         : (
             <div className="connected-container">
-                <form onSubmit={handleFormSubmit}>
+                <form onSubmit={handleFormSubmit} style={{ marginBottom: '12px' }}>
                     <input
                         type="text"
                         placeholder="Enter gif link!"
@@ -152,11 +187,14 @@ export const ConnectedContainer = ({ walletAddress }: ConnectedContainerProps): 
                         onChange={(e: ReactChangeEvent<HTMLInputElement>): void => {
                             setInputValue(e.target.value.trim());
                         }} />
-                    <button type="submit" className="cta-button submit-gif-button">
+                    <button type="submit" className="cta-button base-button">
                         Submit
                     </button>
                 </form>
-                <GifContainer gifList={gifList} handleUpvoteGif={upvoteGif} />
+                <GifContainer
+                    gifList={gifList}
+                    handleUpvoteGif={upvoteGif}
+                    handleSendSol={sendSol} />
             </div>
         );
 };
